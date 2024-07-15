@@ -3,28 +3,26 @@
 const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
-const config = require("../config/config");
-
+const process = require("process");
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || "development";
+const dotenv = require("dotenv");
+
+dotenv.config();
+
 const db = {};
 
-let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
-} else {
-  sequelize = new Sequelize(
-    config[env].DATABASE_NAME,
-    config[env].DATABASE_USER,
-    config[env].DATABASE_PASSWORD,
-    {
-      host: config[env].DATABASE_HOST,
-      dialect: "mysql",
-      logging: config[env].logging,
-      define: config[env].define,
-    }
-  );
-}
+let sequelize = new Sequelize(
+  process.env.DATABASE_NAME,
+  process.env.DATABASE_USER,
+  process.env.DATABASE_PASSWORD,
+  {
+    host: process.env.DATABASE_HOST,
+    dialect: "mysql",
+    define: {
+      underscored: true,
+    },
+  }
+);
 
 fs.readdirSync(__dirname)
   .filter((file) => {
@@ -48,5 +46,7 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 module.exports = db;

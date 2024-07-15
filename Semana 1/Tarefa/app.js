@@ -1,7 +1,7 @@
 const express = require("express");
 const router = require("./routes/router");
 const app = express();
-const connectToDatabase = require("./models/db");
+const connectToDatabase = require("./repository/db");
 
 app.use(express.json());
 app.use("/", router);
