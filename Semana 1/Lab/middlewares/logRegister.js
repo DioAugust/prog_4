@@ -1,4 +1,3 @@
-// middleware that is specific to this router
 const logRegister = function () {
   return function (req, res, next) {
     console.log({
